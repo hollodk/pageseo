@@ -8,6 +8,7 @@ class PageSEO
     {
         $name = $attr['name'];
         $brand = isset($attr['brand']) ? $attr['brand'] : null;
+        $site = isset($attr['site']) ? $attr['site'] : null;
 
         $return = $name;
 
@@ -15,6 +16,10 @@ class PageSEO
         case 'en':
         case 'english':
             switch ($type) {
+            case 'article':
+                $return = sprintf('%s | %s', $name, $site);
+                break;
+
             case 'brand':
                 $return = sprintf('1000s of DISCOUNTS on %s', $name);
                 break;
@@ -34,6 +39,10 @@ class PageSEO
         case 'da':
         case 'danish':
             switch ($type) {
+            case 'article':
+                $return = sprintf('%s | %s', $name, $site);
+                break;
+
             case 'brand':
                 $return = sprintf('1000vis af RABATTER på %s', $name);
                 break;
