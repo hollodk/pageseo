@@ -17,5 +17,8 @@
         "psr-4": {
             "PageSEO\\": "PageSEO/"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
     }
 }
