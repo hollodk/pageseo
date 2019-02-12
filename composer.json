@@ -1,0 +1,21 @@
+{
+    "name": "mh/pageseo",
+    "license": "MIT",
+    "description": "Nifty library to keep your SEO tags clean",
+    "homepage": "http://www.hollo.dk",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Michael Holm",
+            "email": "hollo@hollo.dk"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "PageSEO\\": "PageSEO/"
+        }
+    }
+}
