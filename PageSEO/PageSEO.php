@@ -2,7 +2,7 @@
 
 namespace PageSEO;
 
-class PageSEO;
+class PageSEO
 {
     public function title($type, array $attr, $locale='en')
     {

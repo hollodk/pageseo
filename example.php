@@ -1,9 +1,3 @@
-pageseo
-=======
-
-This is a nifty toolkit to keep your SEO tags clean.
-
-```
 <?php
 
 use PageSEO\PageSEO;
@@ -22,4 +16,3 @@ $title = $seo->title(
 );
 
 var_dump($title);
-```
