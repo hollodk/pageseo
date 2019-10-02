@@ -9,53 +9,52 @@ class PageSEO
     public function title($type, array $attr, $locale='en')
     {
         $name = $attr['name'];
+        $site = $attr['site_name'];
         $brand = isset($attr['brand']) ? $attr['brand'] : null;
-        $site = isset($attr['site']) ? $attr['site'] : null;
-
-        $return = $name;
 
         switch ($locale) {
-        case 'en':
-        case 'english':
+        case 'da':
+        case 'dk':
+        case 'danish':
+        case 'dansk':
             switch ($type) {
-            case 'article':
-                $return = sprintf('%s | %s', $name, $site);
-                break;
-
             case 'brand':
-                $return = sprintf('1000s of DISCOUNTS on %s', $name);
+                $return = sprintf('1000vis af RABATTER på %s @ %s', $name, $site);
                 break;
 
             case 'product':
                 if ($brand) {
-                    $return = sprintf('NEW, %s by %s', $name, $brand);
+                    $return = sprintf('NYT, %s fra %s @ %s', $name, $brand, $site);
                 } else {
-                    $return = sprintf('NEW, %s by %s', $name, $brand);
+                    $return = sprintf('NYT, %s @ %s', $name, $site);
                 }
 
+                break;
+
+            default:
+                $return = sprintf('%s @ %s', $name, $site);
                 break;
             }
 
             break;
 
-        case 'da':
-        case 'danish':
+        default:
             switch ($type) {
-            case 'article':
-                $return = sprintf('%s | %s', $name, $site);
-                break;
-
             case 'brand':
-                $return = sprintf('1000vis af RABATTER på %s', $name);
+                $return = sprintf('1000s of DISCOUNTS on %s @ %s', $name, $site);
                 break;
 
             case 'product':
                 if ($brand) {
-                    $return = sprintf('NYT, %s fra %s', $name, $brand);
+                    $return = sprintf('NEW, %s by %s @ %s', $name, $brand, $site);
                 } else {
-                    $return = sprintf('NYT, %s', $name);
+                    $return = sprintf('NEW, %s @ %s', $name, $site);
                 }
 
+                break;
+
+            default:
+                $return = sprintf('%s @ %s', $name, $site);
                 break;
             }
 
@@ -70,11 +69,32 @@ class PageSEO
         $name = $attr['name'];
         $brand = isset($attr['brand']) ? $attr['brand'] : null;
 
-        $return = $name;
-
         switch ($locale) {
-        case 'en':
-        case 'english':
+        case 'da':
+        case 'dk':
+        case 'danish':
+        case 'dansk':
+            switch ($type) {
+            case 'brand':
+                $return = sprintf('1000vis af RABATTER på %s', $name);
+                break;
+
+            case 'product':
+                if ($brand) {
+                    $return = sprintf('Aktuelt TILBUD på %s / %s', $name, $brand);
+                } else {
+                    $return = sprintf('Aktuelt TILBUD på %s', $name);
+                }
+
+                break;
+
+            default:
+                $return = substr($attr['description'], 0, 155);
+            }
+
+            break;
+
+        default:
             switch ($type) {
             case 'brand':
                 $return = sprintf('1000s of DISCOUNTS on %s', $name);
@@ -88,23 +108,9 @@ class PageSEO
                 }
 
                 break;
-            }
 
-            break;
-
-        case 'da':
-        case 'danish':
-            switch ($type) {
-            case 'brand':
-                $return = sprintf('1000vis af RABATTER på %s', $name);
-                break;
-
-            case 'product':
-                if ($brand) {
-                    $return = sprintf('Aktuelt TILBUD på %s / %s', $name, $brand);
-                } else {
-                    $return = sprintf('Aktuelt TILBUD på %s', $name);
-                }
+            default:
+                $return = substr($attr['description'], 0, 155);
 
                 break;
             }
@@ -119,21 +125,17 @@ class PageSEO
     {
         $res = new \StdClass();
 
+        $brand = isset($attr['brand']) ? $attr['brand'] : null;
+
         $res->title = $this->title(
-            'product',
-            [
-                'name' => $attr['name'],
-                'brand' => $attr['brand'],
-            ],
+            $type,
+            $attr,
             $locale
         );
 
         $res->description = $this->description(
-            'product',
-            [
-                'name' => $attr['name'],
-                'brand' => $attr['brand'],
-            ],
+            $type,
+            $attr,
             $locale
         );
 
@@ -142,7 +144,7 @@ class PageSEO
             $res->json = \JsonLd\Context::create('product', [
                 'name' => $attr['name'],
                 'description' => $attr['description'],
-                'brand' => $attr['brand'],
+                'brand' => $brand,
                 'sku' => $attr['sku'],
                 'url' => $attr['url'],
                 'offers' => [
@@ -153,11 +155,37 @@ class PageSEO
             ]);
 
             $res->og = new OpenGraph();
-            $res->og->type('product')
+            $res->og
+                ->type('product')
                 ->title($res->title)
                 ->image($attr['image_url'])
+                ->siteName($attr['site_name'])
                 ->description($res->description)
-                ->url($url)
+                ->url($attr['url'])
+                ;
+
+            break;
+
+        case 'article':
+            $res->json = \JsonLd\Context::create('article', [
+                'headline' => $attr['name'],
+                'image' => $attr['image_url'],
+                'author' => $attr['author'],
+                'url' => $attr['url'],
+                'datePublished' => $attr['published_at'],
+                'dateCreated' => $attr['created_at'],
+                'dateModified' => $attr['modified_at'],
+                'description' => $res->description,
+            ]);
+
+            $res->og = new OpenGraph();
+            $res->og
+                ->type('article')
+                ->title($res->title)
+                ->image($attr['image_url'])
+                ->siteName($attr['site_name'])
+                ->description($res->description)
+                ->url($attr['url'])
                 ;
 
             break;
