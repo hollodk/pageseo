@@ -11,7 +11,9 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "mh/json-ld": "^1.0",
+        "chriskonnertz/open-graph": "^1.0"
     },
     "autoload": {
         "psr-4": {
@@ -19,6 +21,7 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0"
+        "phpunit/phpunit": "^8.0",
+        "symfony/var-dumper": "^4.3"
     }
 }

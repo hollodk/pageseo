@@ -2,6 +2,8 @@
 
 namespace PageSEO;
 
+use ChrisKonnertz\OpenGraph\OpenGraph;
+
 class PageSEO
 {
     public function title($type, array $attr, $locale='en')
@@ -67,7 +69,6 @@ class PageSEO
     {
         $name = $attr['name'];
         $brand = isset($attr['brand']) ? $attr['brand'] : null;
-        $description = isset($attr['description']) ? $attr['description'] : null;
 
         $return = $name;
 
@@ -80,10 +81,10 @@ class PageSEO
                 break;
 
             case 'product':
-                if ($description) {
-                    $return = sprintf('Current DISCOUNTS on %s', $name, $description);
+                if ($brand) {
+                    $return = sprintf('Current DISCOUNTS on %s / %s', $name, $brand);
                 } else {
-                    $return = sprintf('Current DISCOUNTS on %s / %s', $name);
+                    $return = sprintf('Current DISCOUNTS on %s', $name);
                 }
 
                 break;
@@ -99,8 +100,8 @@ class PageSEO
                 break;
 
             case 'product':
-                if ($description) {
-                    $return = sprintf('Aktuelt TILBUD på %s / %s', $name, $description);
+                if ($brand) {
+                    $return = sprintf('Aktuelt TILBUD på %s / %s', $name, $brand);
                 } else {
                     $return = sprintf('Aktuelt TILBUD på %s', $name);
                 }
@@ -112,5 +113,56 @@ class PageSEO
         }
 
         return $return;
+    }
+
+    public function all($type, array $attr, $locale='en')
+    {
+        $res = new \StdClass();
+
+        $res->title = $this->title(
+            'product',
+            [
+                'name' => $attr['name'],
+                'brand' => $attr['brand'],
+            ],
+            $locale
+        );
+
+        $res->description = $this->description(
+            'product',
+            [
+                'name' => $attr['name'],
+                'brand' => $attr['brand'],
+            ],
+            $locale
+        );
+
+        switch ($type) {
+        case 'product':
+            $res->json = \JsonLd\Context::create('product', [
+                'name' => $attr['name'],
+                'description' => $attr['description'],
+                'brand' => $attr['brand'],
+                'sku' => $attr['sku'],
+                'url' => $attr['url'],
+                'offers' => [
+                    'price' => $attr['price'],
+                    'priceCurrency' => $attr['currency'],
+                ],
+                'category' => $attr['category'],
+            ]);
+
+            $res->og = new OpenGraph();
+            $res->og->type('product')
+                ->title($res->title)
+                ->image($attr['image_url'])
+                ->description($res->description)
+                ->url($url)
+                ;
+
+            break;
+        }
+
+        return $res;
     }
 }
