@@ -40,10 +40,11 @@ var_dump($all);
 $attr = [
     'site_name' => 'Couponia.dk',
     'name' => 'Top 10 reasons to travel to Europe',
-    'description' => $text,
+    'body' => $text,
     'url' => 'https://www.myblog.com/top-10-reasons-to-travel-to-europe',
     'image_url' => 'https://www.google.com/image.jpg',
     'author' => 'Peter Larsen',
+    'publisher' => 'Peter Larsen AG',
     'published_at' => date('Y-m-d'),
     'created_at' => date('Y-m-d'),
     'modified_at' => date('Y-m-d'),

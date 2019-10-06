@@ -75,6 +75,10 @@ class PageSEO
         case 'danish':
         case 'dansk':
             switch ($type) {
+            case 'article':
+                $return = substr($attr['body'], 0, 155);
+                break;
+
             case 'brand':
                 $return = sprintf('1000vis af RABATTER på %s', $name);
                 break;
@@ -96,6 +100,10 @@ class PageSEO
 
         default:
             switch ($type) {
+            case 'article':
+                $return = substr($attr['body'], 0, 155);
+                break;
+
             case 'brand':
                 $return = sprintf('1000s of DISCOUNTS on %s', $name);
                 break;
@@ -170,8 +178,13 @@ class PageSEO
             $res->json = \JsonLd\Context::create('article', [
                 'headline' => $attr['name'],
                 'image' => $attr['image_url'],
-                'author' => $attr['author'],
-                'url' => $attr['url'],
+                'author' => [
+                    'name' => $attr['author'],
+                ],
+                'publisher' => [
+                    'name' => $attr['publisher'],
+                ],
+                'mainEntityOfPage' => $attr['url'],
                 'datePublished' => $attr['published_at'],
                 'dateCreated' => $attr['created_at'],
                 'dateModified' => $attr['modified_at'],
