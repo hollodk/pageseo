@@ -66,6 +66,20 @@ $attr = [
     'description' => $text,
     'url' => 'https://www.canon.com/canon-z1000',
     'image_url' => 'https://www.google.com/image.jpg',
+    'breadcrumb' => [
+        [
+            'url' => '/',
+            'name' => 'Homepage',
+        ],
+        [
+            'url' => '/shop',
+            'name' => 'Shop',
+        ],
+        [
+            'url' => '/shop/nailpolish-1ml',
+            'name' => 'Nailpolish 1ml',
+        ],
+    ],
 ];
 
 $all = $seo->all(

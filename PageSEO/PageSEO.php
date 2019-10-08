@@ -129,6 +129,23 @@ class PageSEO
         return $return;
     }
 
+    public function breadcrumb($routes)
+    {
+        $params = [];
+        foreach ($routes as $route) {
+            $params[] = [
+                'url' => $route['url'],
+                'name' => $route['name'],
+            ];
+        }
+
+        $breadcrumbs = \JsonLd\Context::create('breadcrumb_list', [
+            'itemListElement' => $params,
+        ]);
+
+        return $breadcrumbs;
+    }
+
     public function all($type, array $attr, $locale='en')
     {
         $res = new \StdClass();
@@ -146,6 +163,11 @@ class PageSEO
             $attr,
             $locale
         );
+
+        $res->breadcrumb = null;
+        if (isset($attr['breadcrumb'])) {
+            $res->breadcrumb = $this->breadcrumb($attr['breadcrumb']);
+        }
 
         switch ($type) {
         case 'product':
